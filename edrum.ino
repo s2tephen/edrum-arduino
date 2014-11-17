@@ -1,33 +1,33 @@
-// Saya Date,Eddie Farias & Stephen Suen
+// Saya Date, Eddie Farias & Stephen Suen
 // 2.009
 // Tech Review
 // eDrum
 // November 17, 2014
 
 // intializing drum LED output
-const int Crash_R = 22;
-const int Crash_G = 24;
-const int Crash_B = 26;
+const int Crash_R = 40;
+const int Crash_G = 42;
+const int Crash_B = 44;
 
-const int HiHat_R = 28;
-const int HiHat_G = 30;
-const int HiHat_B = 32;
+const int HiHat_R = 46;
+const int HiHat_G = 48;
+const int HiHat_B = 50;
 
-const int Ride_R = 34;
-const int Ride_G = 36;
-const int Ride_B = 38;
+const int Ride_R = 31;
+const int Ride_G = 33;
+const int Ride_B = 35;
 
-const int LeftTom_R = 40;
-const int LeftTom_G = 42;
-const int LeftTom_B = 44;
+const int LeftTom_R = 22;
+const int LeftTom_G = 24;
+const int LeftTom_B = 26;
 
-const int RightTom_R = 46;
-const int RightTom_G = 48;
-const int RightTom_B = 50;
+const int RightTom_R = 28;
+const int RightTom_G = 30;
+const int RightTom_B = 32;
 
-const int Snare_R = 31;
-const int Snare_G = 33;
-const int Snare_B = 35;
+const int Snare_R = 34;
+const int Snare_G = 36;
+const int Snare_B = 38;
 
 const int FloorTom_R = 37;
 const int FloorTom_G = 39;
@@ -58,14 +58,14 @@ int sensorReading6 = 0;
 int sensorReading7 = 0;
 
 //setting Thresholds (these need to be adjusted when setting up on drums)
-int Crash_T    = 400;
-int HiHat_T    = 400;
-int Ride_T     = 400;
-int LeftTom_T  = 400;
-int RightTom_T = 400;
-int Snare_T    = 400;
-int FloorTom_T = 400;
-int Bass_T     = 400;
+int Crash_T    = 150;
+int HiHat_T    = 180;
+int Ride_T     = 150;
+int LeftTom_T  = 150;
+int RightTom_T = 150;
+int Snare_T    = 150;
+int FloorTom_T = 150;
+int Bass_T     = 150;
 
 //MakingArray of outputs
 int sensors[8]   = {Crash_P, HiHat_P, Ride_P, LeftTom_P, RightTom_P, Snare_P, FloorTom_P, Bass_P};
@@ -288,6 +288,109 @@ void feedback(){
 ////////////////////////////////////////////
 ///// MODE 1: 
 
+void Learn()
+{
+  Serial.println("LEARN MODE");
+  for(int i = 0; i < length; i++)
+  {
+    // Start with no drums to be played
+    // using binary: 0 for do not play, 1 for play  
+    int hit_0 = 0;
+    int hit_1 = 0;
+    int hit_2 = 0;
+    
+    Serial.print("  Drums to hit:");
+      
+    // light up correct drums to be played  
+    if(track1[i] > -1)
+    {
+      digitalWrite(LED_G[track1[i]], HIGH);
+      hit_0 = 1;
+      Serial.print(" ");
+      Serial.print(track1[i]);
+    }
+    
+    if(track2[i] > -1)
+    {
+      digitalWrite(LED_G[track2[i]], HIGH);
+      hit_1 = 1;
+      Serial.print(" ");
+      Serial.print(track2[i]);
+    }
+    
+    if(track3[i] > -1)
+    {
+      digitalWrite(LED_G[track3[i]], HIGH);
+      hit_2 = 1;
+      Serial.print(" ");
+      Serial.println(track3[i]);
+    }
+    
+    Serial.println("");
+    
+    // wait until all drums in sequence have been hit 
+    while(hit_0 == 1 || hit_1 == 1 || hit_2 == 1)
+    {
+      int start_time = millis() - time;
+      if(hit_0 == 1 && analogRead(sensors[track1[i]]) > threshold[track1[i]])
+      {
+        hit_0 = 0;
+        String output = "[h:" + String(track1[i]) + "," + String(start_time) + "]";
+        Serial.print("    ");
+        Serial.println(output);
+      }
+        
+      if(hit_1 == 1 && analogRead(sensors[track2[i]]) > threshold[track2[i]])
+      {
+        hit_1 = 0;
+        String output = "[h:" + String(track2[i]) + "," + String(start_time) + "]";
+        Serial.print("    ");
+        Serial.println(output);
+      }
+        
+      if(hit_2 == 1 && analogRead(sensors[track3[i]]) > threshold[track3[i]])
+      {
+        hit_2 = 0;
+        String output = "[h:" + String(track2[i]) + "," + String(start_time) + "]";
+        Serial.print("    ");
+        Serial.println(output);
+      }   
+    }
+    
+    // turn off all drums 
+    digitalWrite(LED_G[0], LOW);
+    digitalWrite(LED_G[1], LOW);
+    digitalWrite(LED_G[2], LOW);
+    digitalWrite(LED_G[3], LOW);
+    digitalWrite(LED_G[4], LOW);
+    digitalWrite(LED_G[5], LOW);
+    digitalWrite(LED_G[6], LOW);
+    digitalWrite(LED_G[7], LOW);
+    
+    digitalWrite(LED_R[0], LOW);
+    digitalWrite(LED_R[1], LOW);
+    digitalWrite(LED_R[2], LOW);
+    digitalWrite(LED_R[3], LOW);
+    digitalWrite(LED_R[4], LOW);
+    digitalWrite(LED_R[5], LOW);
+    digitalWrite(LED_R[6], LOW);
+    digitalWrite(LED_R[7], LOW);
+    
+    digitalWrite(LED_B[0], LOW);
+    digitalWrite(LED_B[1], LOW);
+    digitalWrite(LED_B[2], LOW);
+    digitalWrite(LED_B[3], LOW);
+    digitalWrite(LED_B[4], LOW);
+    digitalWrite(LED_B[5], LOW);
+    digitalWrite(LED_B[6], LOW);
+    digitalWrite(LED_B[7], LOW);
+    
+    delay(500);
+  }  
+  
+  Serial.println("[e]");
+}
+
 void Learn_LR()
 {
 //  Serial.println("LEARN MODE");
@@ -390,111 +493,55 @@ void Learn_LR()
   
   Serial.println("[e]");
 }
-////
-//Without right and left input
-void Learn()
+
+/////////////////////////////////////////////////////
+  ////////////////// Demo without right left
+  void Demo()
 {
-//  Serial.println("LEARN MODE");
-  for(int i = 0; i < length; i++)
-  {
-    // Start with no drums to be played
-    // using binary: 0 for do not play, 1 for play  
-    int hit_0 = 0;
-    int hit_1 = 0;
-    int hit_2 = 0;
-    
-//    Serial.print("  Drums to hit:");
-      
-    // light up correct drums to be played  
-    if(track1[i] > -1)
-    {
-      digitalWrite(LED_G[track1[i]], HIGH);
-      hit_0 = 1;
-//      Serial.print(" ");
-//      Serial.print(track1[i]);
-    }
-    
-    if(track2[i] > -1)
-    {
-      digitalWrite(LED_G[track2[i]], HIGH);
-      hit_1 = 1;
-//      Serial.print(" ");
-//      Serial.print(track2[i]);
-    }
-    
-    if(track3[i] > -1)
-    {
-      digitalWrite(LED_G[track3[i]], HIGH);
-      hit_2 = 1;
-//      Serial.print(" ");
-//      Serial.println(track3[i]);
-    }
-    
-    Serial.println("");
-    
-    // wait until all drums in sequence have been hit 
-    while(hit_0 == 1 || hit_1 == 1 || hit_2 == 1)
-    {
-      int start_time = millis() - time;
-      if(hit_0 == 1 && analogRead(sensors[track1[i]]) > threshold[track1[i]])
+  boolean songEnd = false;
+  for(int i=0 ; i < length; i++ ){
+      int led_time = (lengths[i]/bpm)*60000;
+ //Turning on LEDs of corresponding drums
+      if (track1[i] > -1)
       {
-        hit_0 = 0;
-        String output = "[h:" + String(track1[i]) + "," + String(start_time) + "]";
-//        Serial.print("    ");
-        Serial.println(output);
+        digitalWrite(LED_G[track1[i]], HIGH);
       }
-        
-      if(hit_1 == 1 && analogRead(sensors[track2[i]]) > threshold[track2[i]])
+      if(track2[i] > -1)
       {
-        hit_1 = 0;
-        String output = "[h:" + String(track2[i]) + "," + String(start_time) + "]";
-//        Serial.print("    ");
-        Serial.println(output);
+        digitalWrite(LED_G[track2[i]], HIGH);
       }
-        
-      if(hit_2 == 1 && analogRead(sensors[track3[i]]) > threshold[track3[i]])
+      if(track3[i] > -1)
       {
-        hit_2 = 0;
-        String output = "[h:" + String(track2[i]) + "," + String(start_time) + "]";
-//        Serial.print("    ");
-        Serial.println(output);
-      }   
-    }
-    
-    // turn off all drums 
-    digitalWrite(LED_G[0], LOW);
-    digitalWrite(LED_G[1], LOW);
-    digitalWrite(LED_G[2], LOW);
-    digitalWrite(LED_G[3], LOW);
-    digitalWrite(LED_G[4], LOW);
-    digitalWrite(LED_G[5], LOW);
-    digitalWrite(LED_G[6], LOW);
-    digitalWrite(LED_G[7], LOW);
-    
-    digitalWrite(LED_R[0], LOW);
-    digitalWrite(LED_R[1], LOW);
-    digitalWrite(LED_R[2], LOW);
-    digitalWrite(LED_R[3], LOW);
-    digitalWrite(LED_R[4], LOW);
-    digitalWrite(LED_R[5], LOW);
-    digitalWrite(LED_R[6], LOW);
-    digitalWrite(LED_R[7], LOW);
-    
-    digitalWrite(LED_B[0], LOW);
-    digitalWrite(LED_B[1], LOW);
-    digitalWrite(LED_B[2], LOW);
-    digitalWrite(LED_B[3], LOW);
-    digitalWrite(LED_B[4], LOW);
-    digitalWrite(LED_B[5], LOW);
-    digitalWrite(LED_B[6], LOW);
-    digitalWrite(LED_B[7], LOW);
-    
-    delay(500);
-  }  
+        digitalWrite(LED_G[track3[i]], HIGH);
+      }
   
-  Serial.println("[e]");
-}
-////////////////////////////////////////////
+
+//    
+//    //How long LED Stays on
+      delay(led_time/2); //This delay would change based on size of note later intialized in an array
+//    
+//    //turning off LEDs
+      if (track1[i] > -1)
+      {
+        digitalWrite(LED_G[track1[i]], LOW);
+      }
+      if(track2[i] > -1)
+      {
+       digitalWrite(LED_G[track2[i]], LOW);
+      }
+      if(track3[i] > -1)
+     {
+       digitalWrite(LED_G[track3[i]], LOW);
+     }
+     delay(led_time/2); // this delay is part of the shared delay; delay between notes
+     if(i==length-1){
+       delay(3000);
+       songEnd == true;
+     }
+    }
+  }
+  
+ ////////////////////////////////////////////
 ///// DEMO with right left:
 void Demo_LR()
 {
@@ -542,54 +589,6 @@ void Demo_LR()
     //keep getting feedback till the song ends
   }
   
-  
-  /////////////////////////////////////////////////////
-  ////////////////// Demo without right left
-  void Demo()
-{
-  boolean songEnd = false;
-  for(int i=0 ; i < length; i++ ){
-      int led_time = (lengths[i]/bpm)*60000;
- //Turning on LEDs of corresponding drums
-      if (track1[i] > -1)
-      {
-        digitalWrite(LED_G[track1[i]], HIGH);
-      }
-      if(track2[i] > -1)
-      {
-        digitalWrite(LED_G[track2[i]], HIGH);
-      }
-      if(track3[i] > -1)
-      {
-        digitalWrite(LED_G[track3[i]], HIGH);
-      }
-  
-
-//    
-//    //How long LED Stays on
-      delay(led_time/2); //This delay would change based on size of note later intialized in an array
-//    
-//    //turning off LEDs
-      if (track1[i] > -1)
-      {
-        digitalWrite(LED_G[track1[i]], LOW);
-      }
-      if(track2[i] > -1)
-      {
-       digitalWrite(LED_G[track2[i]], LOW);
-      }
-      if(track3[i] > -1)
-     {
-       digitalWrite(LED_G[track3[i]], LOW);
-     }
-     delay(led_time/2); // this delay is part of the shared delay; delay between notes
-     if(i==length-1){
-       delay(3000);
-       songEnd == true;
-     }
-    }
-  }
-
 ////////////////////////////////////////////
 ///// MODE 2: FOLLOW 
 ///// this mode currently does not allow for accuracy readings, can be implemented later on now
@@ -669,21 +668,19 @@ void loop(){
     time = millis();
     
     // Choose Mode
-    if (mode == 0){
-      if(action ==0){
+    if (mode == 0){    
+      if (action == 0){
         Learn();
       }
-      if(action ==1){
+      else if (action == 1){
         Learn_LR();
       }
-      if(action ==2){
+      else if (action == 2){
         Demo();
       }
-      if(action ==3){
+      else if (action == 3){
         Demo_LR();
-      }    
-      // Wait to hit
-      
+      }
     }
     if (mode == 1){
       // Play through

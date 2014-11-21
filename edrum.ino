@@ -1,8 +1,8 @@
-// Saya Date and Eddie Farias
+// Saya Date, Eddie Farias & Stephen Suen
 // 2.009
 // Tech Review
 // eDrum
-// November 11, 2014
+// November 17, 2014
 
 // intializing drum LED output
 const int Crash_R = 40;
@@ -221,46 +221,46 @@ void listening() {
       processInput();
     }
   }
-  if (sequenceReceived) {
-    Serial.println("Sequence detected!");
-    Serial.print("mode: ");
-    Serial.println(mode);
-    Serial.print("action: ");
-    Serial.println(action);
-    Serial.print("bpm: ");
-    Serial.println(bpm);
-    Serial.print("length: ");
-    Serial.println(length);
-    
-    Serial.print("track 1:");
-    for (int i = 0; i < length; i++) {
-      Serial.print(" ");
-      Serial.print(track1[i]);
-    }
-    Serial.println("");
-    
-    Serial.print("track 2:");
-    for (int i = 0; i < length; i++) {
-      Serial.print(" ");
-      Serial.print(track2[i]);
-    }
-    Serial.println("");
-    
-    Serial.print("track 3:");
-    for (int i = 0; i < length; i++) {
-      Serial.print(" ");
-      Serial.print(track3[i]);
-    }
-    Serial.println("");
-    
-    Serial.print("lengths:");
-    for (int i = 0; i < length; i++) {
-      Serial.print(" ");
-      Serial.print(lengths[i]);
-    }
-    Serial.println("");
-    Serial.println("...done.");
-  }  
+//  if (sequenceReceived) {
+//    Serial.println("Sequence detected!");
+//    Serial.print("mode: ");
+//    Serial.println(mode);
+//    Serial.print("action: ");
+//    Serial.println(action);
+//    Serial.print("bpm: ");
+//    Serial.println(bpm);
+//    Serial.print("length: ");
+//    Serial.println(length);
+//    
+//    Serial.print("track 1:");
+//    for (int i = 0; i < length; i++) {
+//      Serial.print(" ");
+//      Serial.print(track1[i]);
+//    }
+//    Serial.println("");
+//    
+//    Serial.print("track 2:");
+//    for (int i = 0; i < length; i++) {
+//      Serial.print(" ");
+//      Serial.print(track2[i]);
+//    }
+//    Serial.println("");
+//    
+//    Serial.print("track 3:");
+//    for (int i = 0; i < length; i++) {
+//      Serial.print(" ");
+//      Serial.print(track3[i]);
+//    }
+//    Serial.println("");
+//    
+//    Serial.print("lengths:");
+//    for (int i = 0; i < length; i++) {
+//      Serial.print(" ");
+//      Serial.print(lengths[i]);
+//    }
+//    Serial.println("");
+//    Serial.println("...done.");
+//  }  
 }
 
 
@@ -290,7 +290,7 @@ void feedback(){
 
 void Learn()
 {
-//  Serial.println("LEARN MODE");
+  Serial.println("LEARN MODE");
   for(int i = 0; i < length; i++)
   {
     // Start with no drums to be played
@@ -299,34 +299,34 @@ void Learn()
     int hit_1 = 0;
     int hit_2 = 0;
     
-//    Serial.print("  Drums to hit:");
+    Serial.print("  Drums to hit:");
       
     // light up correct drums to be played  
     if(track1[i] > -1)
     {
       digitalWrite(LED_G[track1[i]], HIGH);
       hit_0 = 1;
-//      Serial.print(" ");
-//      Serial.print(track1[i]);
+      Serial.print(" ");
+      Serial.print(track1[i]);
     }
     
     if(track2[i] > -1)
     {
       digitalWrite(LED_G[track2[i]], HIGH);
       hit_1 = 1;
-//      Serial.print(" ");
-//      Serial.print(track2[i]);
+      Serial.print(" ");
+      Serial.print(track2[i]);
     }
     
     if(track3[i] > -1)
     {
       digitalWrite(LED_G[track3[i]], HIGH);
       hit_2 = 1;
-//      Serial.print(" ");
-//      Serial.println(track3[i]);
+      Serial.print(" ");
+      Serial.println(track3[i]);
     }
     
-//    Serial.println("");
+    Serial.println("");
     
     // wait until all drums in sequence have been hit 
     while(hit_0 == 1 || hit_1 == 1 || hit_2 == 1)
@@ -336,7 +336,7 @@ void Learn()
       {
         hit_0 = 0;
         String output = "[h:" + String(track1[i]) + "," + String(start_time) + "]";
-//        Serial.print("    ");
+        Serial.print("    ");
         Serial.println(output);
       }
         
@@ -344,7 +344,7 @@ void Learn()
       {
         hit_1 = 0;
         String output = "[h:" + String(track2[i]) + "," + String(start_time) + "]";
-//        Serial.print("    ");
+        Serial.print("    ");
         Serial.println(output);
       }
         
@@ -352,7 +352,7 @@ void Learn()
       {
         hit_2 = 0;
         String output = "[h:" + String(track2[i]) + "," + String(start_time) + "]";
-//        Serial.print("    ");
+        Serial.print("    ");
         Serial.println(output);
       }   
     }
@@ -551,7 +551,7 @@ void Demo_LR()
  //Turning on LEDs of corresponding drums
       if (track1[i] > -1)
       {
-        digitalWrite(LED_R[track1[i]], HIGH);
+        digitalWrite(LED_G[track1[i]], HIGH);
       }
       if(track2[i] > -1)
       {
@@ -559,7 +559,7 @@ void Demo_LR()
       }
       if(track3[i] > -1)
       {
-        digitalWrite(LED_B[track3[i]], HIGH);
+        digitalWrite(LED_G[track3[i]], HIGH);
       }
   
 
@@ -570,7 +570,7 @@ void Demo_LR()
 //    //turning off LEDs
       if (track1[i] > -1)
       {
-        digitalWrite(LED_R[track1[i]], LOW);
+        digitalWrite(LED_G[track1[i]], LOW);
       }
       if(track2[i] > -1)
       {
@@ -578,7 +578,7 @@ void Demo_LR()
       }
       if(track3[i] > -1)
      {
-       digitalWrite(LED_B[track3[i]], LOW);
+       digitalWrite(LED_G[track3[i]], LOW);
      }
      delay(led_time/2); // this delay is part of the shared delay; delay between notes
      if(i==length-1){

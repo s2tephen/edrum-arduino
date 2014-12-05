@@ -147,6 +147,9 @@ void setup()
   pinMode(Bass_R, OUTPUT);
   pinMode(Bass_G, OUTPUT);
   pinMode(Bass_B, OUTPUT);
+  
+  /// a conditional for compose mode:
+boolean keepComposing = false;
    
   Serial.begin(115200); 
 }
@@ -447,7 +450,67 @@ void Play()
   resetLEDS();
 }
 
+void compose(){
+long time = millis();
+if(keepComposing == true){
+   for(int i=0; i<8; i++){
+      int threshold = thresholds[i];
+      int counterThreshold = counterThresholds[i]; 
+      if(detectDrum(i,threshold,counterThreshold)){
+        int t = millis()-time;
+        String output = "";
+          output = "[h:" + String(i) + "," + String(t) + ",1]"; // this is what i thought you wanted me to print.
+        }
+      }
+    }
+}
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void demo(){
+long time = millis();
+  // Serial.println("PLAY MODE");
+  float duration = (numberOfBeats*3600)/bpm;
+  int extraTime = 1000; // however long we want to keep the loop running
+  float del = 1/64; // this is the time we want the note to be off for
+        int index = 0;
+  while ((millis()-time) < lengthsMilli[length - 1] + extraTime){
+   //Lighting up LED sequence
+      float currentTime = millis()-time;
+    
+    if(index<length){
+      //Serial.println("i'm in this loop now");
+      while(lengthsMilli[index] < currentTime){
+        index +=1;
+        //Serial.println("updating index");
+        //Serial.print(index);
+      }
+      //Serial.println("index");
+      //Serial.println(index);
+      if(index == 10000){
+      }
+      else{
+        //if(current_beat + del > lengths[index]){
+        if(currentTime + 300 > lengthsMilli[index]){
+          resetLEDS();
+        }
+        else{
+          if(track1[index]>-1 && !track1hit){
+            lightLED(track1[index],1,0,1);
+          }
+          if(track2[index]>-1 && !track2hit){
+            lightLED(track2[index],1,0,1);
+          }
+          if(track3[index]>-1 && !track3hit){
+            lightLED(track3[index],1,0,1);
+          }
+        }
+      }
+    }
+  Serial.println("[e]");
+  resetLEDS();
+  }
+///////////////////////////////////////////////
 ////////////////////////////////////////////
 ////////////////////////////////////////////
 ///// Begin Program   
@@ -461,6 +524,12 @@ void loop(){
     resetLEDS();
     if (mode == 0) {
       Play();
+    }
+    if(mode==1){
+    demo();
+    }
+    if(mode ==3){
+    compose(); // for this mode you need to allow the user to say "stop" else it will keep running
     }
     sequenceReceived = false;
   }

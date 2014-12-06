@@ -6,6 +6,8 @@
 
 // number of beats -- should be a sequence field
 float numberOfBeats = 8;
+  /// a conditional for compose mode:
+boolean keepComposing = false;
 
 // intializing drum LED output
 const int Crash_R = 40;
@@ -148,8 +150,7 @@ void setup()
   pinMode(Bass_G, OUTPUT);
   pinMode(Bass_B, OUTPUT);
   
-  /// a conditional for compose mode:
-boolean keepComposing = false;
+
    
   Serial.begin(115200); 
 }
@@ -495,17 +496,18 @@ long time = millis();
           resetLEDS();
         }
         else{
-          if(track1[index]>-1 && !track1hit){
+          if(track1[index]>-1){
             lightLED(track1[index],1,0,1);
           }
-          if(track2[index]>-1 && !track2hit){
+          if(track2[index]>-1){
             lightLED(track2[index],1,0,1);
           }
-          if(track3[index]>-1 && !track3hit){
+          if(track3[index]>-1){
             lightLED(track3[index],1,0,1);
           }
         }
       }
+    }
     }
   Serial.println("[e]");
   resetLEDS();

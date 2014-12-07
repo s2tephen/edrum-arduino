@@ -7,47 +7,60 @@
 ////////////////////////////////////////////
 ///// INITIALIZATION
 // intializing drum LED output
-const int Crash_R = 2;
-const int Crash_G = 3;
-const int Crash_B = 4;
+const int Crash_R = 8;
+const int Crash_G = 9;
+const int Crash_B = 10;
 
-const int HiHat_R = 14;
-const int HiHat_G = 15;
-const int HiHat_B = 16;
+// CURRENTLY DISCONNECTED
+const int HiHat_R = 30;
+const int HiHat_G = 31;
+const int HiHat_B = 32;
 
-const int Ride_R = 30;
-const int Ride_G = 31;
-const int Ride_B = 32;
+const int Ride_R = 24;
+const int Ride_G = 25;
+const int Ride_B = 26;
+// THANK YOU
 
-const int LeftTom_R = 24;
-const int LeftTom_G = 25;
-const int LeftTom_B = 26;
+const int LeftTom_R = 2;
+const int LeftTom_G = 3;
+const int LeftTom_B = 4;
 
-const int RightTom_R = 11;
-const int RightTom_G = 12;
-const int RightTom_B = 13;
+const int RightTom_R = 5;
+const int RightTom_G = 6;
+const int RightTom_B = 7;
 
-const int Snare_R = 8;
-const int Snare_G = 9;
-const int Snare_B = 10;
+const int Snare_R = 27;
+const int Snare_G = 28;
+const int Snare_B = 29;
 
-const int FloorTom_R = 27;
-const int FloorTom_G = 28;
-const int FloorTom_B = 29;
+const int FloorTom_R = 11;
+const int FloorTom_G = 12;
+const int FloorTom_B = 13;
 
-const int Bass_R = 5;
-const int Bass_G = 6;
-const int Bass_B = 7;
+const int Bass_R = 14;
+const int Bass_G = 15;
+const int Bass_B = 16;
 
 // intializing piezos
-const int Crash_P    = A4;
-const int HiHat_P    = A3;
-const int Ride_P     = A10;
-const int LeftTom_P  = A8;
-const int RightTom_P = A7;
-const int Snare_P    = A6;
-const int FloorTom_P = A9;
-const int Bass_P     = A5;
+//NOTE*******// 0-7 on code correspond to 1-8 on dock
+// order of LED --> BGR
+//ride --> A8 (piezo), 26,25,24
+//big tom --> A7, 13,12,11
+//right tom --> 7,6,5, A5
+//bass --> 16,15,14, A3
+//lefttom --> 4,3,2, A4
+//snare --> 29,28,27, A9
+//crash --> 10,9,8, A6
+//hi-hat --> 32,31,30, A10
+
+const int Crash_P    = A6;
+const int HiHat_P    = A10;
+const int Ride_P     = A8;
+const int LeftTom_P  = A4;
+const int RightTom_P = A5;
+const int Snare_P    = A9;
+const int FloorTom_P = A7;
+const int Bass_P     = A3;
 
 //setting thresholds (these need to be adjusted when setting up on drums)
 int Crash_T    = 300;
@@ -110,7 +123,7 @@ void setup()
   pinMode(Crash_B, OUTPUT);
   
   pinMode(HiHat_R, OUTPUT);
-  pinMode(HiHat_G, OUTPUT);
+//  pinMode(HiHat_G, OUTPUT);
   pinMode(HiHat_B, OUTPUT);
   
   pinMode(Ride_R, OUTPUT);
@@ -390,6 +403,7 @@ void demo() {
 // default "karaoke" mode
 void practice()
 {  
+  Serial.println("seq recieved");
   long time = millis();
   int extraTime = 1000; // however long we want to keep the loop running
   int index = 0;

@@ -331,6 +331,9 @@ void parseSequence(String sequence) {
     splitIntArray(sequence.substring(2), ',', length, lengthsMilli);
     sequenceReceived = true;
   }
+  else if (arrayType == 'e') { // lengths
+    keepComposing = false;
+  }
 }
 
 // sets threshold of a drum
@@ -451,39 +454,40 @@ void Play()
   resetLEDS();
 }
 
-void compose(){
-long time = millis();
-if(keepComposing == true){
-   for(int i=0; i<8; i++){
+void compose() {
+  long time = millis();
+   keepComposing = true;
+   while (keepComposing == true){
+    for(int i=0; i<8; i++) {
       int threshold = thresholds[i];
       int counterThreshold = counterThresholds[i]; 
-      if(detectDrum(i,threshold,counterThreshold)){
+      if(detectDrum(i,threshold,counterThreshold)) {
         int t = millis()-time;
-        String output = "";
-          output = "[h:" + String(i) + "," + String(t) + ",1]"; // this is what i thought you wanted me to print.
-        }
+        String output = "[h:" + String(i) + "," + String(t) + ",1]"; // this is what i thought you wanted me to print.
+        Serial.println(output);        
       }
     }
+    listening();
+  }
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void demo(){
-long time = millis();
-  // Serial.println("PLAY MODE");
+  long time = millis();
+  Serial.println("PLAY MODE");
   float duration = (numberOfBeats*3600)/bpm;
   int extraTime = 1000; // however long we want to keep the loop running
   float del = 1/64; // this is the time we want the note to be off for
-        int index = 0;
   while ((millis()-time) < lengthsMilli[length - 1] + extraTime){
    //Lighting up LED sequence
       float currentTime = millis()-time;
     
-    if(index<length){
-      //Serial.println("i'm in this loop now");
+    for(int index = 0; index<length; index++){
+     // Serial.println("i'm in this loop now");
       while(lengthsMilli[index] < currentTime){
         index +=1;
-        //Serial.println("updating index");
+        Serial.println("updating index");
         //Serial.print(index);
       }
       //Serial.println("index");
@@ -508,10 +512,11 @@ long time = millis();
         }
       }
     }
-    }
+  }
   Serial.println("[e]");
   resetLEDS();
-  }
+}
+
 ///////////////////////////////////////////////
 ////////////////////////////////////////////
 ////////////////////////////////////////////
@@ -524,15 +529,16 @@ void loop(){
   listening();
   if (sequenceReceived) {
     resetLEDS();
+    sequenceReceived = false;
     if (mode == 0) {
       Play();
     }
     if(mode==1){
-    demo();
+      demo();
     }
     if(mode ==3){
-    compose(); // for this mode you need to allow the user to say "stop" else it will keep running
+      compose(); // for this mode you need to allow the user to say "stop" else it will keep running
     }
-    sequenceReceived = false;
+    
   }
 }  

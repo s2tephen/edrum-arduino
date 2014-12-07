@@ -475,40 +475,36 @@ void compose() {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void demo(){
   long time = millis();
-  Serial.println("PLAY MODE");
+  // Serial.println("DEMO MODE");
   float duration = (numberOfBeats*3600)/bpm;
   int extraTime = 1000; // however long we want to keep the loop running
   float del = 1/64; // this is the time we want the note to be off for
-  while ((millis()-time) < lengthsMilli[length - 1] + extraTime){
-   //Lighting up LED sequence
-      float currentTime = millis()-time;
-    
-    for(int index = 0; index<length; index++){
-     // Serial.println("i'm in this loop now");
+  int index = 0;
+  while ((millis()-time) < lengthsMilli[length - 1] + extraTime){//<duration+extraTime)
+    float currentTime = millis()-time;
+  
+    if(index<length){
+      //Serial.println("i'm in this loop now");
       while(lengthsMilli[index] < currentTime){
         index +=1;
-        Serial.println("updating index");
+        //Serial.println("updating index");
         //Serial.print(index);
       }
       //Serial.println("index");
       //Serial.println(index);
-      if(index == 10000){
+      //if(current_beat + del > lengths[index])
+      if(currentTime + 300 > lengthsMilli[index]){
+        resetLEDS();
       }
       else{
-        //if(current_beat + del > lengths[index]){
-        if(currentTime + 300 > lengthsMilli[index]){
-          resetLEDS();
+        if(track1[index]>-1){
+          lightLED(track1[index],1,0,1);
         }
-        else{
-          if(track1[index]>-1){
-            lightLED(track1[index],1,0,1);
-          }
-          if(track2[index]>-1){
-            lightLED(track2[index],1,0,1);
-          }
-          if(track3[index]>-1){
-            lightLED(track3[index],1,0,1);
-          }
+        if(track2[index]>-1){
+          lightLED(track2[index],1,0,1);
+        }
+        if(track3[index]>-1){
+          lightLED(track3[index],1,0,1);
         }
       }
     }

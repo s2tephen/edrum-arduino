@@ -1,60 +1,55 @@
 // Stephen Suen, Brad Eckert, Saya Date
 // 2.009
 // Final Presentation
-// upBeat
-// November 17, 2014
+// UpBeat
+// December 8, 2014
 
-// number of beats -- should be a sequence field
-float numberOfBeats = 8;
-  /// a conditional for compose mode:
-boolean keepComposing = false;
-
+////////////////////////////////////////////
+///// INITIALIZATION
 // intializing drum LED output
-const int Crash_R = 40;
-const int Crash_G = 42;
-const int Crash_B = 44;
+const int Crash_R = 2;
+const int Crash_G = 3;
+const int Crash_B = 4;
 
-// CURRENTLY DISCONNECTED
-const int HiHat_R = 46;
-const int HiHat_G = 48;
-const int HiHat_B = 50;
+const int HiHat_R = 14;
+const int HiHat_G = 15;
+const int HiHat_B = 16;
 
-const int Ride_R = 31;
-const int Ride_G = 33;
-const int Ride_B = 35;
-// THANK YOU
+const int Ride_R = 30;
+const int Ride_G = 31;
+const int Ride_B = 32;
 
-const int LeftTom_R = 22;
-const int LeftTom_G = 24;
+const int LeftTom_R = 24;
+const int LeftTom_G = 25;
 const int LeftTom_B = 26;
 
-const int RightTom_R = 28;
-const int RightTom_G = 30;
-const int RightTom_B = 32;
+const int RightTom_R = 11;
+const int RightTom_G = 12;
+const int RightTom_B = 13;
 
-const int Snare_R = 34;
-const int Snare_G = 36;
-const int Snare_B = 38;
+const int Snare_R = 8;
+const int Snare_G = 9;
+const int Snare_B = 10;
 
-const int FloorTom_R = 37;
-const int FloorTom_G = 39;
-const int FloorTom_B = 41;
+const int FloorTom_R = 27;
+const int FloorTom_G = 28;
+const int FloorTom_B = 29;
 
-const int Bass_R = 43;
-const int Bass_G = 45;
-const int Bass_B = 47;
+const int Bass_R = 5;
+const int Bass_G = 6;
+const int Bass_B = 7;
 
-// intializing piezos 
-const int Crash_P    = A0;
-const int HiHat_P    = A1;
-const int Ride_P     = A2;
-const int LeftTom_P  = A3;
-const int RightTom_P = A4;
-const int Snare_P    = A5;
-const int FloorTom_P = A6;
-const int Bass_P     = A7;
+// intializing piezos
+const int Crash_P    = A4;
+const int HiHat_P    = A3;
+const int Ride_P     = A10;
+const int LeftTom_P  = A8;
+const int RightTom_P = A7;
+const int Snare_P    = A6;
+const int FloorTom_P = A9;
+const int Bass_P     = A5;
 
-//setting Thresholds (these need to be adjusted when setting up on drums)
+//setting thresholds (these need to be adjusted when setting up on drums)
 int Crash_T    = 300;
 int HiHat_T    = 300;
 int Ride_T     = 300;
@@ -64,7 +59,7 @@ int Snare_T    = 235;
 int FloorTom_T = 210;
 int Bass_T     = 225;
 
-/// setting counter thresholds
+// setting counter thresholds
 int Crash_T2    = 80;
 int HiHat_T2    = 80;
 int Ride_T2     = 80;
@@ -83,34 +78,26 @@ int LED_R[8]     = {Crash_R, HiHat_R, Ride_R, LeftTom_R, RightTom_R, Snare_R, Fl
 int LED_G[8]     = {Crash_G, HiHat_G, Ride_G, LeftTom_G, RightTom_G, Snare_G, FloorTom_G, Bass_G};
 int LED_B[8]     = {Crash_B, HiHat_B, Ride_B, LeftTom_B, RightTom_B, Snare_B, FloorTom_B, Bass_B};
 
+// parser variables
+boolean keepComposing = false; // conditional for compose mode
 boolean sequenceReceived = false;
 
 const char startDelimiter = '[';
 const char endDelimiter   = ']';
 
 int mode = 0;
-int bpm = 120;
 int length = 0;
+int lrdata = 0;
 
 int tracksProcessed = 0;
 int thresholdSetter[3];
-int metadata[2];
+int metadata[3];
 int* track1 = 0;
 int* track2 = 0;
 int* track3 = 0;
 int* lengthsMilli = 0;
 
-//int mode = 0;
-//int action = 0;
-//int bpm = 30;
-//int length = 8;
-//
-//int track1[] = {0,0,0,0,0,0,0,0};
-//int track2[] = {-1,-1,-1,-1,-1,-1,-1,-1};
-//int track3[] = {-1,-1,-1,-1,-1,-1,-1,-1};
-//float lengths[] = {1,2,3,4,5,6,7,8};
-//float lengthsMilli[] = {0,2000,4000,6000,8000,10000,12000,14000};
-
+// hit variables
 boolean track1hit = false;
 boolean track2hit = false;
 boolean track3hit = false;
@@ -150,16 +137,21 @@ void setup()
   pinMode(Bass_G, OUTPUT);
   pinMode(Bass_B, OUTPUT);
   
-
-   
   Serial.begin(115200); 
 }
 
 ///////////////////////////////////////////////////
-//supplementary functions
-// sets the threshold of drum to value
-void setThreshold(int drum, int value) {
-  thresholds[drum] = value;
+///// HELPER FUNCTIONS
+// sets threshold of a drum
+void setThreshold(int drum, int thresholdId, int value) {
+  if (thresholdId == 0) {
+    thresholds[drum] = value;
+  }
+  else if (thresholdId == 1) {
+    counterThresholds[drum] = value;
+  }
+  String output = "[r:" + String(drum) + "," + String(thresholdId) + "," + String(value) + "]";
+  Serial.println(output);
 }
 
 // sets LED of drum based on RGB values (0 or 1)
@@ -205,22 +197,17 @@ void resetLEDS() {
   } 
 }
 
-/////////////////////////////////////////////////
-// Detecting Drum hit
+// detect drum hit
 boolean detectDrum(int drum, int threshold, int counterThreshold) { // differential threshold needs to be tweaked
   int counter = 0;
-  for(int i=0;i<150;i++){
+  for (int i = 0; i < 150; i++) {
     int a = analogRead(sensors[drum]);
     //Serial.println(a);
-    if (a>threshold){
-      counter+=1;
+    if (a > threshold) {
+      counter++;
     }
   }
-  //Serial.println("counter is ");
-  //Serial.println("checking drum ");
-  //Serial.println(drum);
-  //Serial.println(counter);
-  if(counter>counterThreshold){
+  if (counter > counterThreshold) {
     return true;
   }
   else{
@@ -229,7 +216,7 @@ boolean detectDrum(int drum, int threshold, int counterThreshold) { // different
 }
 
 ////////////////////////////////////////////
-///// COMMS (OLD)
+///// COMMS
 // listen on serial port
 void listening() {
   if (!sequenceReceived) {
@@ -284,8 +271,8 @@ void processInput() {
       sequence = "";
       break;
     case endDelimiter:
-//      Serial.print("parsing input: ");
-//      Serial.println(sequence);
+      // Serial.print("parsing input: ");
+      // Serial.println(sequence);
       parseSequence(sequence);
       break;
     default:
@@ -302,9 +289,10 @@ void parseSequence(String sequence) {
     setThreshold(thresholdSetter[0], thresholdSetter[1], thresholdSetter[2]);
   }
   else if (arrayType == 'm') { // metadata
-    splitIntArray(sequence.substring(2), ',', 2, metadata);
+    splitIntArray(sequence.substring(2), ',', 3, metadata);
     mode = metadata[0];
     length = metadata[1];
+    lrdata = metadata[2];
     delete[] track1;
     delete[] track2;
     delete[] track3;
@@ -336,18 +324,6 @@ void parseSequence(String sequence) {
   }
 }
 
-// sets threshold of a drum
-void setThreshold(int drum, int thresholdId, int value) {
-  if (thresholdId == 0) {
-    thresholds[drum] = value;
-  }
-  else if (thresholdId == 1) {
-    counterThresholds[drum] = value;
-  }
-  String output = "[r:" + String(drum) + "," + String(thresholdId) + "," + String(value) + "]";
-  Serial.println(output);
-}
-
 // turns 'x,y,z' into pdata = [x, y, z] of type int
 void splitIntArray(String array, char delimiter, int length, int pdata[]) {
   String currentString = array;
@@ -361,48 +337,86 @@ void splitIntArray(String array, char delimiter, int length, int pdata[]) {
   }
 }
 
+////////////////////////////////////////////
+///// DEMO MODE
+// play lights only
+void demo() {
+  long time = millis();
+  int extraTime = 1000; // however long we want to keep the loop running
+  int index = 0;
+  while ((millis() - time) < lengthsMilli[length - 1] + extraTime) { // duration + extraTime
+    float currentTime = millis() - time;
+  
+    if (index < length) {
+      while (lengthsMilli[index] < currentTime) {
+        index++;
+      }
+      if (currentTime + 300 > lengthsMilli[index]) {
+        resetLEDS();
+      }
+      else {
+        if (track1[index] > -1) {
+          lightLED(track1[index], 1, 0, 1);
+        }
+        if (track2[index] > -1) {
+          if (lrdata == 0) {
+            lightLED(track2[index], 1, 0, 1);
+          }
+          else {
+            lightLED(track2[index], 0, 1, 1);
+          }
+        }
+        if (track3[index] > -1) {
+          if (lrdata == 0) {
+            lightLED(track3[index], 1, 0, 1);
+          }
+          else {
+            lightLED(track3[index], 1, 1, 0);
+          }
+        }
+      }
+    }
+  }
+  Serial.println("[e]");
+  resetLEDS();
+}
 
 ////////////////////////////////////////////
-///// MODE 1: 
-//// This is I guess "learn mode" which I need some time to upload again
-
+///// STEP BY STEP MODE
+// waits for hits
 
 ////////////////////////////////////////////
-///// MODE 2: FOLLOW 
-//
-void Play()
+///// PRACTICE MODE 
+// default "karaoke" mode
+void practice()
 {  
   long time = millis();
-  // Serial.println("PLAY MODE");
-  float duration = (numberOfBeats*3600)/bpm;
   int extraTime = 1000; // however long we want to keep the loop running
-  float del = 1/64; // this is the time we want the note to be off for
-        int index = 0;
-  while ((millis()-time) < lengthsMilli[length - 1] + extraTime){//<duration+extraTime){
-                //Serial.println(millis()-time);
-    for(int i=0; i<8; i++){
+  int index = 0;
+  while ((millis() - time) < lengthsMilli[length - 1] + extraTime) { //duration + extraTime
+    for (int i = 0; i < 8; i++) {
       int threshold = thresholds[i];
       int counterThreshold = counterThresholds[i]; // need to make this array with experimentally determined values
-      if(detectDrum(i,threshold,counterThreshold)){
-        int t = millis()-time;
+      if (detectDrum(i, threshold, counterThreshold)) {
+        int t = millis() - time;
         String output = "";
         if (track1[index] == i && !track1hit) {
           output = "[h:" + String(i) + "," + String(t) + ",1]";
           track1hit = true;
-//          Serial.print("Correct hit on drum ");
-//          Serial.println(i);
+          // Serial.print("Correct hit on drum ");
+          // Serial.println(i);
         }
         else if (track2[index] == i && !track2hit) {
           output = "[h:" + String(i) + "," + String(t) + ",1]";
           track2hit = true;
-//          Serial.print("Correct hit on drum ");
-//          Serial.println(i);
+          // Serial.print("Correct hit on drum ");
+          // Serial.println(i);
         }
         else if (track3[index] == i && !track3hit) {
           output = "[h:" + String(i) + "," + String(t) + ",1]";
           track3hit = true;
-//          Serial.print("Correct hit on drum ");
-//          Serial.println(i);
+          // Serial.print("Correct hit on drum ");
+          // Serial.println(i);
         }
         else {
           output = "[h:" + String(i) + "," + String(t) + ",0]";
@@ -410,41 +424,37 @@ void Play()
         Serial.println(output);
       }
     }
-    //Lighting up LED sequence
-    float current_beat = (millis()-time)*float(bpm)/3600.0;
-      float currentTime = millis()-time;
-      //Serial.println("we are on this beat");
-      //Serial.print(current_beat);
-      //boolean found = false;
+    // lighting up LED sequence
+    float currentTime = millis() - time;
     
-    if(index<length){
-      //Serial.println("i'm in this loop now");
-      while(lengthsMilli[index] < currentTime){
-        index +=1;
-        //Serial.println("updating index");
-        //Serial.print(index);
+    if (index < length) {
+      while (lengthsMilli[index] < currentTime) {
+        index++;
       }
-      //Serial.println("index");
-      //Serial.println(index);
-      if(index == 10000){
+      if (currentTime + 300 > lengthsMilli[index]) {
+        resetLEDS();
+        track1hit = false;
+        track2hit = false;
+        track3hit = false;
       }
-      else{
-        //if(current_beat + del > lengths[index]){
-        if(currentTime + 300 > lengthsMilli[index]){
-          resetLEDS();
-          track1hit = false;
-          track2hit = false;
-          track3hit = false;
+      else {
+        if (track1[index] > -1 && !track1hit) {
+          lightLED(track1[index], 1, 0, 1);
         }
-        else{
-          if(track1[index]>-1 && !track1hit){
-            lightLED(track1[index],1,0,1);
+        if (track2[index] > -1 && !track2hit) {
+          if (lrdata == 0) {
+            lightLED(track2[index], 1, 0, 1);
           }
-          if(track2[index]>-1 && !track2hit){
-            lightLED(track2[index],1,0,1);
+          else {
+            lightLED(track2[index], 0, 1, 1);
           }
-          if(track3[index]>-1 && !track3hit){
-            lightLED(track3[index],1,0,1);
+        }
+        if (track3[index] > -1 && !track3hit) {
+          if (lrdata == 0) {
+            lightLED(track3[index], 1, 0, 1);
+          }
+          else {
+            lightLED(track3[index], 1, 1, 0);
           }
         }
       }
@@ -454,16 +464,20 @@ void Play()
   resetLEDS();
 }
 
+////////////////////////////////////////////
+///// COMPOSE MODE
+// listen for hits only
+// TODO: fix this - gets stuck in while loop
 void compose() {
   long time = millis();
    keepComposing = true;
-   while (keepComposing == true){
-    for(int i=0; i<8; i++) {
+   while (keepComposing == true) {
+    for (int i = 0; i < 8; i++) {
       int threshold = thresholds[i];
       int counterThreshold = counterThresholds[i]; 
-      if(detectDrum(i,threshold,counterThreshold)) {
-        int t = millis()-time;
-        String output = "[h:" + String(i) + "," + String(t) + ",1]"; // this is what i thought you wanted me to print.
+      if (detectDrum(i, threshold, counterThreshold)) {
+        int t = millis() - time;
+        String output = "[h:" + String(i) + "," + String(t) + ",1]";
         Serial.println(output);        
       }
     }
@@ -471,70 +485,32 @@ void compose() {
   }
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-void demo(){
-  long time = millis();
-  // Serial.println("DEMO MODE");
-  float duration = (numberOfBeats*3600)/bpm;
-  int extraTime = 1000; // however long we want to keep the loop running
-  float del = 1/64; // this is the time we want the note to be off for
-  int index = 0;
-  while ((millis()-time) < lengthsMilli[length - 1] + extraTime){//<duration+extraTime)
-    float currentTime = millis()-time;
-  
-    if(index<length){
-      //Serial.println("i'm in this loop now");
-      while(lengthsMilli[index] < currentTime){
-        index +=1;
-        //Serial.println("updating index");
-        //Serial.print(index);
-      }
-      //Serial.println("index");
-      //Serial.println(index);
-      //if(current_beat + del > lengths[index])
-      if(currentTime + 300 > lengthsMilli[index]){
-        resetLEDS();
-      }
-      else{
-        if(track1[index]>-1){
-          lightLED(track1[index],1,0,1);
-        }
-        if(track2[index]>-1){
-          lightLED(track2[index],1,0,1);
-        }
-        if(track3[index]>-1){
-          lightLED(track3[index],1,0,1);
-        }
-      }
-    }
-  }
-  Serial.println("[e]");
-  resetLEDS();
-}
-
-///////////////////////////////////////////////
 ////////////////////////////////////////////
-////////////////////////////////////////////
-///// Begin Program   
-
-// how long to wait before program loops  
-//const int delay_loop = 1000000000;
-
-void loop(){
+///// MAIN LOOP
+// putting everything together
+void loop() {
   listening();
   if (sequenceReceived) {
     resetLEDS();
     sequenceReceived = false;
-    if (mode == 0) {
-      Play();
+    switch (mode) {
+      case 0:
+        demo();
+        break;
+      case 1:
+        // stepByStep();
+        break;
+      case 2:
+        practice();
+        break;
+      case 3:
+        // loop step by step
+        break;
+      case 4:
+        // loop practice
+        break;
+      case 5:
+        compose();
     }
-    if(mode==1){
-      demo();
-    }
-    if(mode ==3){
-      compose(); // for this mode you need to allow the user to say "stop" else it will keep running
-    }
-    
   }
 }  

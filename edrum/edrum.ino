@@ -360,12 +360,17 @@ void demo() {
   while ((millis() - time) < lengthsMilli[length - 1] + extraTime) { // duration + extraTime
     float currentTime = millis() - time;
   
-    if (index < length) {
+    if (index < length-1) {
       while (lengthsMilli[index] < currentTime) {
         index++;
+        
       }
+      //Serial.println("index");
+      //Serial.println(index);
       if (currentTime + 300 > lengthsMilli[index]) {
+        //Serial.println("resetting");
         resetLEDS();
+        //Serial.println("done resetting");
       }
       else {
         if (track1[index] > -1) {
@@ -441,7 +446,7 @@ void practice()
     // lighting up LED sequence
     float currentTime = millis() - time;
     
-    if (index < length) {
+    if (index < length-1) {
       while (lengthsMilli[index] < currentTime) {
         index++;
       }
@@ -509,6 +514,7 @@ void loop() {
     sequenceReceived = false;
     switch (mode) {
       case 0:
+        Serial.print("demo");
         demo();
         break;
       case 1:

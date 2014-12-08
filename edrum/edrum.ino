@@ -402,7 +402,78 @@ void demo() {
 ////////////////////////////////////////////
 ///// STEP BY STEP MODE
 // waits for hits
-
+void Learn()
+{
+//  Serial.println("LEARN MODE");
+  for(int i = 0; i < length; i++)
+  {
+    // Start with no drums to be played
+    // using binary: 0 for do not play, 1 for play  
+    int hit_0 = 0;
+    int hit_1 = 0;
+    int hit_2 = 0;
+    
+//    Serial.print("  Drums to hit:");
+      
+    // light up correct drums to be played  
+    if(track1[i] > -1)
+    {
+      digitalWrite(LED_G[track1[i]], HIGH);
+      hit_0 = 1;
+//      Serial.print(" ");
+//      Serial.print(track1[i]);
+    }
+    
+    if(track2[i] > -1)
+    {
+      digitalWrite(LED_G[track2[i]], HIGH);
+      hit_1 = 1;
+//      Serial.print(" ");
+//      Serial.print(track2[i]);
+    }
+    
+    if(track3[i] > -1)
+    {
+      digitalWrite(LED_G[track3[i]], HIGH);
+      hit_2 = 1;
+//      Serial.print(" ");
+//      Serial.println(track3[i]);
+    }
+    
+    Serial.println("");
+    
+    // wait until all drums in sequence have been hit 
+    while(hit_0 == 1 || hit_1 == 1 || hit_2 == 1)
+    {
+      int start_time = millis() - time;
+      if(hit_0 == 1 && analogRead(sensors[track1[i]]) > threshold[track1[i]])
+      {
+        hit_0 = 0;
+        String output = "[h:" + String(track1[i]) + "," + String(start_time) + "]";
+//        Serial.print("    ");
+        Serial.println(output);
+      }
+        
+      if(hit_1 == 1 && analogRead(sensors[track2[i]]) > threshold[track2[i]])
+      {
+        hit_1 = 0;
+        String output = "[h:" + String(track2[i]) + "," + String(start_time) + "]";
+//        Serial.print("    ");
+        Serial.println(output);
+      }
+        
+      if(hit_2 == 1 && analogRead(sensors[track3[i]]) > threshold[track3[i]])
+      {
+        hit_2 = 0;
+        String output = "[h:" + String(track2[i]) + "," + String(start_time) + "]";
+//        Serial.print("    ");
+        Serial.println(output);
+      }   
+    }
+    resetLEDS();
+  }
+  Serial.print("[e]");
+}
 ////////////////////////////////////////////
 ///// PRACTICE MODE 
 // default "karaoke" mode

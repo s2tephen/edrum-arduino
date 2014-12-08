@@ -445,7 +445,7 @@ void practice()
       while (lengthsMilli[index] < currentTime) {
         index++;
       }
-      if (currentTime + 300 > lengthsMilli[index]) {
+      if (currentTime + 50 > lengthsMilli[index]) {
         resetLEDS();
         track1hit = false;
         track2hit = false;

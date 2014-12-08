@@ -63,24 +63,24 @@ const int FloorTom_P = A7;
 const int Bass_P     = A3;
 
 //setting thresholds (these need to be adjusted when setting up on drums)
-int Crash_T    = 300;
-int HiHat_T    = 300;
-int Ride_T     = 300;
-int LeftTom_T  = 330;
-int RightTom_T = 280;
-int Snare_T    = 235;
-int FloorTom_T = 210;
-int Bass_T     = 225;
+int Crash_T    = 380;
+int HiHat_T    = 140;
+int Ride_T     = 420;
+int LeftTom_T  = 360;
+int RightTom_T = 350;
+int Snare_T    = 240;
+int FloorTom_T = 460;
+int Bass_T     = 690;
 
 // setting counter thresholds
-int Crash_T2    = 80;
+int Crash_T2    = 120;
 int HiHat_T2    = 80;
-int Ride_T2     = 80;
-int LeftTom_T2  = 80;
-int RightTom_T2 = 100;
-int Snare_T2    = 75;
-int FloorTom_T2 = 75;
-int Bass_T2     = 80;
+int Ride_T2     = 135;
+int LeftTom_T2  = 100;
+int RightTom_T2 = 110;
+int Snare_T2    = 70;
+int FloorTom_T2 = 135;
+int Bass_T2     = 147;
 
 // array of outputs
 int sensors[8]   = {Crash_P, HiHat_P, Ride_P, LeftTom_P, RightTom_P, Snare_P, FloorTom_P, Bass_P};

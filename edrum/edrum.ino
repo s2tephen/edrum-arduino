@@ -1,4 +1,4 @@
-// Stephen Suen, Brad Eckert, Saya Date
+  k// Stephen Suen, Brad Eckert, Saya Date
 // 2.009
 // Final Presentation
 // UpBeat
@@ -11,7 +11,6 @@ const int Crash_R = 8;
 const int Crash_G = 9;
 const int Crash_B = 10;
 
-// CURRENTLY DISCONNECTED
 const int HiHat_R = 30;
 const int HiHat_G = 31;
 const int HiHat_B = 32;
@@ -19,7 +18,6 @@ const int HiHat_B = 32;
 const int Ride_R = 24;
 const int Ride_G = 25;
 const int Ride_B = 26;
-// THANK YOU
 
 const int LeftTom_R = 2;
 const int LeftTom_G = 3;
@@ -30,7 +28,7 @@ const int RightTom_G = 6;
 const int RightTom_B = 7;
 
 const int Snare_R = 27;
-const int Snare_G = 28;
+const int Snare_G = 33;
 const int Snare_B = 29;
 
 const int FloorTom_R = 11;
@@ -83,13 +81,19 @@ int FloorTom_T2 = 135;
 int Bass_T2     = 147;
 
 // array of outputs
-int sensors[8]   = {Crash_P, HiHat_P, Ride_P, LeftTom_P, RightTom_P, Snare_P, FloorTom_P, Bass_P};
-int thresholds[8] = {Crash_T, HiHat_T, Ride_T, LeftTom_T, RightTom_T, Snare_T, FloorTom_T, Bass_T};
-int counterThresholds[8] = {Crash_T2, HiHat_T2, Ride_T2, LeftTom_T2, RightTom_T2, Snare_T2, FloorTom_T2, Bass_T2};
+int sensors[8]   = {
+  Crash_P, HiHat_P, Ride_P, LeftTom_P, RightTom_P, Snare_P, FloorTom_P, Bass_P};
+int thresholds[8] = {
+  Crash_T, HiHat_T, Ride_T, LeftTom_T, RightTom_T, Snare_T, FloorTom_T, Bass_T};
+int counterThresholds[8] = {
+  Crash_T2, HiHat_T2, Ride_T2, LeftTom_T2, RightTom_T2, Snare_T2, FloorTom_T2, Bass_T2};
 
-int LED_R[8]     = {Crash_R, HiHat_R, Ride_R, LeftTom_R, RightTom_R, Snare_R, FloorTom_R, Bass_R};
-int LED_G[8]     = {Crash_G, HiHat_G, Ride_G, LeftTom_G, RightTom_G, Snare_G, FloorTom_G, Bass_G};
-int LED_B[8]     = {Crash_B, HiHat_B, Ride_B, LeftTom_B, RightTom_B, Snare_B, FloorTom_B, Bass_B};
+int LED_R[8]     = {
+  Crash_R, HiHat_R, Ride_R, LeftTom_R, RightTom_R, Snare_R, FloorTom_R, Bass_R};
+int LED_G[8]     = {
+  Crash_G, HiHat_G, Ride_G, LeftTom_G, RightTom_G, Snare_G, FloorTom_G, Bass_G};
+int LED_B[8]     = {
+  Crash_B, HiHat_B, Ride_B, LeftTom_B, RightTom_B, Snare_B, FloorTom_B, Bass_B};
 
 // parser variables
 boolean keepComposing = false; // conditional for compose mode
@@ -121,35 +125,37 @@ void setup()
   pinMode(Crash_R, OUTPUT);
   pinMode(Crash_G, OUTPUT);
   pinMode(Crash_B, OUTPUT);
-  
+
   pinMode(HiHat_R, OUTPUT);
-//  pinMode(HiHat_G, OUTPUT);
+  //  pinMode(HiHat_G, OUTPUT);
   pinMode(HiHat_B, OUTPUT);
-  
+
   pinMode(Ride_R, OUTPUT);
   pinMode(Ride_G, OUTPUT);
   pinMode(Ride_B, OUTPUT);
-  
+
   pinMode(LeftTom_R, OUTPUT);
   pinMode(LeftTom_G, OUTPUT);
   pinMode(LeftTom_B, OUTPUT);
-  
+
   pinMode(RightTom_R, OUTPUT);
   pinMode(RightTom_G, OUTPUT);
   pinMode(RightTom_B, OUTPUT);
-  
+
   pinMode(Snare_R, OUTPUT);
   pinMode(Snare_G, OUTPUT);
   pinMode(Snare_B, OUTPUT);
-  
+
   pinMode(FloorTom_R, OUTPUT);
   pinMode(FloorTom_G, OUTPUT);
   pinMode(FloorTom_B, OUTPUT);
-  
+
   pinMode(Bass_R, OUTPUT);
   pinMode(Bass_G, OUTPUT);
   pinMode(Bass_B, OUTPUT);
-  
+
+  resetLEDS();
+
   Serial.begin(115200); 
 }
 
@@ -178,28 +184,28 @@ void setThreshold(int drum, int thresholdId, int value) {
 // 1, 1, 1 = white
 void lightLED(int drum, int r, int g, int b) {
   switch (r) {
-    case 0:
-      digitalWrite(LED_R[drum], LOW);
-      break;
-    case 1:
-      digitalWrite(LED_R[drum], HIGH);
-      break;
+  case 0:
+    digitalWrite(LED_R[drum], LOW);
+    break;
+  case 1:
+    digitalWrite(LED_R[drum], HIGH);
+    break;
   }
   switch (g) {
-    case 0:
-      digitalWrite(LED_G[drum], LOW);
-      break;
-    case 1:
-      digitalWrite(LED_G[drum], HIGH);
-      break;
+  case 0:
+    digitalWrite(LED_G[drum], LOW);
+    break;
+  case 1:
+    digitalWrite(LED_G[drum], HIGH);
+    break;
   }
   switch (b) {
-    case 0:
-      digitalWrite(LED_B[drum], LOW);
-      break;
-    case 1:
-      digitalWrite(LED_B[drum], HIGH);
-      break;
+  case 0:
+    digitalWrite(LED_B[drum], LOW);
+    break;
+  case 1:
+    digitalWrite(LED_B[drum], HIGH);
+    break;
   }
 }
 
@@ -237,42 +243,42 @@ void listening() {
       processInput();
     }
   }
-//  if (sequenceReceived) {
-//    Serial.println("Sequence detected!");
-//    Serial.print("mode: ");
-//    Serial.println(mode);
-//    Serial.print("length: ");
-//    Serial.println(length);
-//    
-//    Serial.print("track 1:");
-//    for (int i = 0; i < length; i++) {
-//      Serial.print(" ");
-//      Serial.print(track1[i]);
-//    }
-//    Serial.println("");
-//    
-//    Serial.print("track 2:");
-//    for (int i = 0; i < length; i++) {
-//      Serial.print(" ");
-//      Serial.print(track2[i]);
-//    }
-//    Serial.println("");
-//    
-//    Serial.print("track 3:");
-//    for (int i = 0; i < length; i++) {
-//      Serial.print(" ");
-//      Serial.print(track3[i]);
-//    }
-//    Serial.println("");
-//    
-//    Serial.print("lengthsMilli:");
-//    for (int i = 0; i < length; i++) {
-//      Serial.print(" ");
-//      Serial.print(lengthsMilli[i]);
-//    }
-//    Serial.println("");
-//    Serial.println("...done.");
-//  }  
+  //  if (sequenceReceived) {
+  //    Serial.println("Sequence detected!");
+  //    Serial.print("mode: ");
+  //    Serial.println(mode);
+  //    Serial.print("length: ");
+  //    Serial.println(length);
+  //    
+  //    Serial.print("track 1:");
+  //    for (int i = 0; i < length; i++) {
+  //      Serial.print(" ");
+  //      Serial.print(track1[i]);
+  //    }
+  //    Serial.println("");
+  //    
+  //    Serial.print("track 2:");
+  //    for (int i = 0; i < length; i++) {
+  //      Serial.print(" ");
+  //      Serial.print(track2[i]);
+  //    }
+  //    Serial.println("");
+  //    
+  //    Serial.print("track 3:");
+  //    for (int i = 0; i < length; i++) {
+  //      Serial.print(" ");
+  //      Serial.print(track3[i]);
+  //    }
+  //    Serial.println("");
+  //    
+  //    Serial.print("lengthsMilli:");
+  //    for (int i = 0; i < length; i++) {
+  //      Serial.print(" ");
+  //      Serial.print(lengthsMilli[i]);
+  //    }
+  //    Serial.println("");
+  //    Serial.println("...done.");
+  //  }  
 }
 
 // builds sequence string for parsing
@@ -280,18 +286,18 @@ void processInput() {
   static String sequence = "";
   char input = Serial.read();
   switch (input) {
-    case startDelimiter:
-      sequence = "";
-      break;
-    case endDelimiter:
-      // Serial.print("parsing input: ");
-      // Serial.println(sequence);
-      parseSequence(sequence);
-      break;
-    default:
-      sequence += input;
-      break;
-   }
+  case startDelimiter:
+    sequence = "";
+    break;
+  case endDelimiter:
+    // Serial.print("parsing input: ");
+    // Serial.println(sequence);
+    parseSequence(sequence);
+    break;
+  default:
+    sequence += input;
+    break;
+  }
 }
 
 // parses strings and assigns to variables
@@ -312,7 +318,7 @@ void parseSequence(String sequence) {
     delete[] lengthsMilli;
   }
   else if (arrayType == 't') { // track
-   if (tracksProcessed == 0) {
+    if (tracksProcessed == 0) {
       track1 = new int[length];
       splitIntArray(sequence.substring(2), ',', length, track1);
     }
@@ -359,11 +365,11 @@ void demo() {
   int index = 0;
   while ((millis() - time) < lengthsMilli[length - 1] + extraTime) { // duration + extraTime
     float currentTime = millis() - time;
-  
+
     if (index < length-1) {
       while (lengthsMilli[index] < currentTime) {
         index++;
-        
+
       }
       //Serial.println("index");
       //Serial.println(index);
@@ -402,9 +408,10 @@ void demo() {
 ////////////////////////////////////////////
 ///// STEP BY STEP MODE
 // waits for hits
-void Learn()
+void stepByStep()
 {
-//  Serial.println("LEARN MODE");
+  long time = millis();
+  //  Serial.println("LEARN MODE");
   for(int i = 0; i < length; i++)
   {
     // Start with no drums to be played
@@ -412,61 +419,61 @@ void Learn()
     int hit_0 = 0;
     int hit_1 = 0;
     int hit_2 = 0;
-    
-//    Serial.print("  Drums to hit:");
-      
+
+    //    Serial.print("  Drums to hit:");
+
     // light up correct drums to be played  
     if(track1[i] > -1)
     {
-      digitalWrite(LED_G[track1[i]], HIGH);
+      lightLED(track1[i], 1, 0, 1);
       hit_0 = 1;
-//      Serial.print(" ");
-//      Serial.print(track1[i]);
+      //      Serial.print(" ");
+      //      Serial.print(track1[i]);
     }
-    
+
     if(track2[i] > -1)
     {
-      digitalWrite(LED_G[track2[i]], HIGH);
+      lightLED(track2[i], 1, 0, 1);
       hit_1 = 1;
-//      Serial.print(" ");
-//      Serial.print(track2[i]);
+      //      Serial.print(" ");
+      //      Serial.print(track2[i]);
     }
-    
+
     if(track3[i] > -1)
     {
-      digitalWrite(LED_G[track3[i]], HIGH);
+      lightLED(track3[i], 1, 0, 1);
       hit_2 = 1;
-//      Serial.print(" ");
-//      Serial.println(track3[i]);
+      //      Serial.print(" ");
+      //      Serial.println(track3[i]);
     }
-    
+
     Serial.println("");
-    
+
     // wait until all drums in sequence have been hit 
     while(hit_0 == 1 || hit_1 == 1 || hit_2 == 1)
     {
       int start_time = millis() - time;
-      if(hit_0 == 1 && analogRead(sensors[track1[i]]) > threshold[track1[i]])
+      if(hit_0 == 1 && analogRead(sensors[track1[i]]) > thresholds[track1[i]])
       {
         hit_0 = 0;
         String output = "[h:" + String(track1[i]) + "," + String(start_time) + "]";
-//        Serial.print("    ");
+        //        Serial.print("    ");
         Serial.println(output);
       }
-        
-      if(hit_1 == 1 && analogRead(sensors[track2[i]]) > threshold[track2[i]])
+
+      if(hit_1 == 1 && analogRead(sensors[track2[i]]) > thresholds[track2[i]])
       {
         hit_1 = 0;
         String output = "[h:" + String(track2[i]) + "," + String(start_time) + "]";
-//        Serial.print("    ");
+        //        Serial.print("    ");
         Serial.println(output);
       }
-        
-      if(hit_2 == 1 && analogRead(sensors[track3[i]]) > threshold[track3[i]])
+
+      if(hit_2 == 1 && analogRead(sensors[track3[i]]) > thresholds[track3[i]])
       {
         hit_2 = 0;
         String output = "[h:" + String(track2[i]) + "," + String(start_time) + "]";
-//        Serial.print("    ");
+        //        Serial.print("    ");
         Serial.println(output);
       }   
     }
@@ -516,7 +523,7 @@ void practice()
     }
     // lighting up LED sequence
     float currentTime = millis() - time;
-    
+
     if (index < length-1) {
       while (lengthsMilli[index] < currentTime) {
         index++;
@@ -560,8 +567,8 @@ void practice()
 // TODO: fix this - gets stuck in while loop
 void compose() {
   long time = millis();
-   keepComposing = true;
-   while (keepComposing == true) {
+  keepComposing = true;
+  while (keepComposing == true) {
     for (int i = 0; i < 8; i++) {
       int threshold = thresholds[i];
       int counterThreshold = counterThresholds[i]; 
@@ -584,24 +591,24 @@ void loop() {
     resetLEDS();
     sequenceReceived = false;
     switch (mode) {
-      case 0:
-        Serial.print("demo");
-        demo();
-        break;
-      case 1:
-        // stepByStep();
-        break;
-      case 2:
-        practice();
-        break;
-      case 3:
-        // loop step by step
-        break;
-      case 4:
-        // loop practice
-        break;
-      case 5:
-        compose();
+    case 0:
+      Serial.print("demo");
+      demo();
+      break;
+    case 1:
+      stepByStep();
+      break;
+    case 2:
+      practice();
+      break;
+    case 3:
+      // loop step by step
+      break;
+    case 4:
+      // loop practice
+      break;
+    case 5:
+      compose();
     }
   }
-}  
+}

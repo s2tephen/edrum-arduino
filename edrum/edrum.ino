@@ -1,4 +1,4 @@
-  k// Stephen Suen, Brad Eckert, Saya Date
+// Stephen Suen, Brad Eckert, Saya Date
 // 2.009
 // Final Presentation
 // UpBeat
